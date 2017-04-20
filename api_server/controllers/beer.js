@@ -28,9 +28,12 @@ exports.postBeers = function(ctx, next) {
 exports.getBeers = function(ctx, next) {
   // Use the Beer model to find all beer
   return Beer.find(function(err, beers) {
-    if (err)
-      res.send(err);
+    // if (err)
+    //res.send(err);
+
     ctx.body = beers;
+
+    console.log(beers);
     return next();
   });
 };
@@ -40,8 +43,11 @@ exports.getBeers = function(ctx, next) {
 exports.getBeer = function(ctx, next) {
   // Use the Beer model to find a specific beer
   return Beer.findById(ctx.params.beer_id, function(err, beer) {
-    if (err)
-      res.send(err);
+    if (err) {
+      //res.send(err);
+    }
+    console.log(ctx.params.beer_id);
+    console.log(beer);
     ctx.body = beer;
     return next();
   });
@@ -49,6 +55,7 @@ exports.getBeer = function(ctx, next) {
 
 // Create endpoint /api/beers/:beer_id for PUT
 exports.putBeer = function(ctx, next) {
+
   // Use the Beer model to find a specific beer
   return Beer.findById(ctx.params.beer_id, function(err, beer) {
     if (err)
@@ -56,16 +63,17 @@ exports.putBeer = function(ctx, next) {
 
     // Update the existing beer quantity
     beer.quantity = ctx.request.body.quantity;
-
     // Save the beer and check for errors
     return beer.save(function(err) {
-      if (err)
-        res.send(err);
+    //  if (err)
+    //    res.send(err);
       ctx.body = beer;
+
       return next();
     });
 
   });
+
 };
 
 // Create endpoint /api/beers/:beer_id for DELETE
