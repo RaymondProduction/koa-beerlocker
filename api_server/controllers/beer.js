@@ -2,78 +2,82 @@
 var Beer = require('../models/beer');
 
 // Create endpoint /api/beers for POSTS
-exports.postBeers = function(req, res) {
+exports.postBeers = function(ctx, next) {
   // Create a new instance of the Beer model
   var beer = new Beer();
 
   // Set the beer properties that came from the POST data
-  beer.name = req.body.name;
-  beer.type = req.body.type;
-  beer.quantity = req.body.quantity;
+
+  beer.name = ctx.request.body.name;
+  beer.type = ctx.request.body.type;
+  beer.quantity = ctx.request.body.quantity;
 
   // Save the beer and check for errors
-  beer.save(function(err) {
+  return beer.save(function(err) {
     if (err)
       res.send(err);
-
-    res.json({ message: 'Beer added to the locker!', data: beer });
+    ctx.body = {
+      message: 'Beer added to the locker!',
+      data: beer
+    };
+    return next();
   });
 };
 
 // Create endpoint /api/beers for GET
-exports.getBeers = function(ctx) {
-  console.log('yes');
-  var res;
-  var self=this;
+exports.getBeers = function(ctx, next) {
   // Use the Beer model to find all beer
-  res = Beer.find(function(err, beers) {
+  return Beer.find(function(err, beers) {
     if (err)
       res.send(err);
-      ctx.body = beers;
-      return beers;
+    ctx.body = beers;
+    return next();
   });
-  console.log(res);
-  ctx.body={message : 'Yes'};
 };
 
+
 // Create endpoint /api/beers/:beer_id for GET
-exports.getBeer = function(req, res) {
+exports.getBeer = function(ctx, next) {
   // Use the Beer model to find a specific beer
-  Beer.findById(req.params.beer_id, function(err, beer) {
+  return Beer.findById(ctx.params.beer_id, function(err, beer) {
     if (err)
       res.send(err);
-
-    res.json(beer);
+    ctx.body = beer;
+    return next();
   });
 };
 
 // Create endpoint /api/beers/:beer_id for PUT
-exports.putBeer = function(req, res) {
+exports.putBeer = function(ctx, next) {
   // Use the Beer model to find a specific beer
-  Beer.findById(req.params.beer_id, function(err, beer) {
+  return Beer.findById(ctx.params.beer_id, function(err, beer) {
     if (err)
       res.send(err);
 
     // Update the existing beer quantity
-    beer.quantity = req.body.quantity;
+    beer.quantity = ctx.request.body.quantity;
 
     // Save the beer and check for errors
-    beer.save(function(err) {
+    return beer.save(function(err) {
       if (err)
         res.send(err);
-
-      res.json(beer);
+      ctx.body = beer;
+      return next();
     });
+
   });
 };
 
 // Create endpoint /api/beers/:beer_id for DELETE
-exports.deleteBeer = function(req, res) {
+exports.deleteBeer = function(ctx, next) {
   // Use the Beer model to find a specific beer and remove it
-  Beer.findByIdAndRemove(req.params.beer_id, function(err) {
+  return Beer.findByIdAndRemove(ctx.params.beer_id, function(err) {
     if (err)
       res.send(err);
 
-    res.json({ message: 'Beer removed from the locker!' });
+    ctx.body = {
+      message: 'Beer removed from the locker!'
+    };
+    return next();
   });
 };

@@ -13,32 +13,31 @@ var Koa = require('koa');
 var app = new Koa();
 // Create our Koa router
 var Router = require('koa-router');
-var router = new Router();
+var router = new Router({
+  prefix: '/api'
+});
 
 // Use the body-parser package in our application
 var bodyParser = require('koa-bodyparser');
 
 // will parse application/x-javascript type body as a JSON string
-app.use(bodyParser({
-  extendTypes: {
-    json: ['application/x-javascript']
-  }
-}));
+app.use(bodyParser());
+
 /*
 app.use(async ctx => {
   // the parsed body will store in ctx.request.body
   // if nothing was parsed, body will be an empty object {}
   ctx.body = ctx.request.body;
-});*/
-
+});
+*/
 router
-  .get('/beers',beerController.getBeers)
-  .post('/beers',beerController.postBeers)
-  .get('/beers/:beer_id',beerController.getBeer)
-  .put('/beers/:beer_id',beerController.putBeer)
-  .delete('/beers/:beer_id',beerController.deleteBeer)
-  .post('/users',userController.postUsers)
-  .get('/users',userController.getUsers);
+  .get('/beers', beerController.getBeers)
+  .post('/beers', beerController.postBeers)
+  .get('/beers/:beer_id', beerController.getBeer)
+  .put('/beers/:beer_id', beerController.putBeer)
+  .delete('/beers/:beer_id', beerController.deleteBeer)
+  .post('/users', userController.postUsers)
+  .get('/users', userController.getUsers);
 
 
 app
