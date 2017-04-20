@@ -21,15 +21,19 @@ exports.postBeers = function(req, res) {
 };
 
 // Create endpoint /api/beers for GET
-exports.getBeers = function(req, res) {
+exports.getBeers = function(ctx) {
   console.log('yes');
+  var res;
+  var self=this;
   // Use the Beer model to find all beer
-  Beer.find(function(err, beers) {
+  res = Beer.find(function(err, beers) {
     if (err)
       res.send(err);
-
-    res.json(beers);
+      ctx.body = beers;
+      return beers;
   });
+  console.log(res);
+  ctx.body={message : 'Yes'};
 };
 
 // Create endpoint /api/beers/:beer_id for GET

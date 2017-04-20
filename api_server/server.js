@@ -24,12 +24,12 @@ app.use(bodyParser({
     json: ['application/x-javascript']
   }
 }));
-
+/*
 app.use(async ctx => {
   // the parsed body will store in ctx.request.body
   // if nothing was parsed, body will be an empty object {}
   ctx.body = ctx.request.body;
-});
+});*/
 
 router
   .get('/beers',beerController.getBeers)
