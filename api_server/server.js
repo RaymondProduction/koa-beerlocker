@@ -16,6 +16,12 @@ var router = new Router({
   prefix: '/api'
 });
 
+// sessions
+var convert = require('koa-convert')
+var session = require('koa-generic-session')
+app.keys = ['your-session-secret']
+app.use(convert(session()))
+
 // Use the body-parser package in our application
 var bodyParser = require('koa-bodyparser');
 
@@ -30,6 +36,12 @@ app.use(async ctx => {
   ctx.input_body = ctx.request.body;
 });
 */
+
+// authentication
+require('./controllers/auth')
+var passport = require('koa-passport')
+app.use(passport.initialize())
+app.use(passport.session())
 var routes = require('./routes');
 
 routes(router);
