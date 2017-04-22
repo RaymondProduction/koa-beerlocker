@@ -20,8 +20,9 @@ passport.deserializeUser(async function(id, done) {
   }
 })
 
-var LocalStrategy = require('passport-local').Strategy
+const LocalStrategy = require('passport-local').Strategy
 passport.use(new LocalStrategy(function(username, password, done) {
+  console.log('==>',username,password)
   fetchUser()
     .then(user => {
       if (username === user.username && password === user.password) {

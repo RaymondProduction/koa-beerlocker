@@ -1,4 +1,3 @@
-
 // API - Server
 
 // Load required packages
@@ -10,20 +9,28 @@ mongoose.connect('mongodb://localhost:27017/beerlocker');
 // Create our Koa application
 var Koa = require('koa');
 var app = new Koa();
-// Create our Koa router
-var Router = require('koa-router');
-var router = new Router({
-  prefix: '/api'
-});
+
+
+// var router = new Router({
+//   prefix: '/api'
+// });
+
+// trust proxy
+app.proxy = true
 
 // sessions
 var convert = require('koa-convert')
 var session = require('koa-generic-session')
 app.keys = ['your-session-secret']
-app.use(convert(session()))
+app.use(convert(session()));
 
 // Use the body-parser package in our application
 var bodyParser = require('koa-bodyparser');
+
+// Create our Koa router
+var Router = require('koa-router');
+var router = new Router();
+
 
 
 app.use(bodyParser());
@@ -45,13 +52,18 @@ app.use(passport.session())
 var routes = require('./routes');
 
 routes(router);
-
-
+var beerController = require('./controllers/beer');
 app
   .use(router.routes())
-  .use(router.allowedMethods());
-
-// will parse application/x-javascript type body as a JSON string
+  .use(router.allowedMethods())
+    // Require authentication for now
+  .use(function(ctx, next) {
+    if (ctx.isAuthenticated()) {
+      return next()
+    } else {
+      ctx.redirect('/')
+    }
+  });
 
 
 // Start the server

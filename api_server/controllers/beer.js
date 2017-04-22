@@ -32,8 +32,6 @@ exports.getBeers = function(ctx, next) {
     //res.send(err);
 
     ctx.body = beers;
-
-    console.log(beers);
     return next();
   });
 };
@@ -46,8 +44,6 @@ exports.getBeer = function(ctx, next) {
     if (err) {
       //res.send(err);
     }
-    console.log(ctx.params.beer_id);
-    console.log(beer);
     ctx.body = beer;
     return next();
   });
