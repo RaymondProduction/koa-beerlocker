@@ -1,7 +1,12 @@
-var passport = require('koa-passport')
+const passport = require('koa-passport')
+var fs = require('fs')
 
 var fetchUser = (() => {
-  var user = { id: 1, username: 'test', password: 'test' }
+  var user = {
+    id: 1,
+    username: 'test',
+    password: 'test'
+  }
   return async function() {
     return user
   }
@@ -15,14 +20,13 @@ passport.deserializeUser(async function(id, done) {
   try {
     var user = await fetchUser()
     done(null, user)
-  } catch(err) {
+  } catch (err) {
     done(err)
   }
 })
 
 const LocalStrategy = require('passport-local').Strategy
 passport.use(new LocalStrategy(function(username, password, done) {
-  console.log('==>',username,password)
   fetchUser()
     .then(user => {
       if (username === user.username && password === user.password) {
@@ -33,3 +37,35 @@ passport.use(new LocalStrategy(function(username, password, done) {
     })
     .catch(err => done(err))
 }))
+
+exports.getLogout = function(ctx) {
+  ctx.logout();
+  ctx.redirect('/');
+}
+
+exports.getMain = function(ctx) {
+  ctx.type = 'html'
+  ctx.body = fs.createReadStream('views/login.html')
+}
+
+// ???
+exports.postLoginVerify = passport.authenticate('local', {
+    successRedirect: '/beers',
+    failureRedirect: '/'
+  })
+
+exports.postCustom = function(ctx, next) {
+  return passport.authenticate('local', function(err, user, info, status) {
+    if (user === false) {
+      ctx.body = {
+        success: false
+      }
+      ctx.throw(401)
+    } else {
+      ctx.body = {
+        success: true
+      }
+      return ctx.login(user)
+    }
+  })(ctx, next)
+}
