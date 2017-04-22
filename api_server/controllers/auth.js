@@ -1,16 +1,44 @@
-const passport = require('koa-passport')
-var fs = require('fs')
+const passport = require('koa-passport');
+var User = require('../models/user');
+var fs = require('fs');
 
-var fetchUser = (() => {
-  var user = {
-    id: 1,
-    username: 'test',
-    password: 'test'
-  }
-  return async function() {
-    return user
-  }
-})()
+// var fetchUser = (() => {
+//   var user = {
+//     id: 1,
+//     username: 'test',
+//     password: 'test'
+//   }
+//   return async function() {
+//     return user
+//   }
+// })()
+
+
+var fetchUser = async function(username) {
+  var promise = new Promise(function(resolve, reject) {
+    User.findOne({
+      username: username
+    }, function(err, user) {
+
+      if (err) {
+        return reject(err);
+      }
+      // No user found with that username
+      if (!user) {
+        return reject(null);
+      }
+      // Success
+      console.log('!!!=>', user.username, ' ', user.password);
+      console.log('!!!=>', username);
+      return resolve(user);
+    });
+  });
+  console.log('Yes!!');
+  return await promise;
+}
+
+
+
 
 passport.serializeUser(function(user, done) {
   done(null, user.id)
@@ -27,8 +55,9 @@ passport.deserializeUser(async function(id, done) {
 
 const LocalStrategy = require('passport-local').Strategy
 passport.use(new LocalStrategy(function(username, password, done) {
-  fetchUser()
+  fetchUser(username)
     .then(user => {
+      console.log('2=>', user.username, ' ', user.password);
       if (username === user.username && password === user.password) {
         done(null, user)
       } else {
@@ -50,9 +79,9 @@ exports.getMain = function(ctx) {
 
 // ???
 exports.postLoginVerify = passport.authenticate('local', {
-    successRedirect: '/beers',
-    failureRedirect: '/'
-  })
+  successRedirect: '/beers',
+  failureRedirect: '/'
+})
 
 exports.postCustom = function(ctx, next) {
   return passport.authenticate('local', function(err, user, info, status) {
