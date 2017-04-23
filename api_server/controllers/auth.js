@@ -39,7 +39,6 @@ var fetchUser = async function(username) {
 
 
 
-
 passport.serializeUser(function(user, done) {
   done(null, user.id)
 })
@@ -57,12 +56,25 @@ const LocalStrategy = require('passport-local').Strategy
 passport.use(new LocalStrategy(function(username, password, done) {
   fetchUser(username)
     .then(user => {
+      user.verifyPassword(password, function(err, isMatch) {
+        if (err) {
+          return done(null, false)
+        }
+
+        //Password did not match
+        if (!isMatch) {
+          return done(null, false);
+        }
+
+        // Success
+        return done(null, user);
+      });
       console.log('2=>', user.username, ' ', user.password);
-      if (username === user.username && password === user.password) {
-        done(null, user)
-      } else {
-        done(null, false)
-      }
+      // if (username === user.username && password === user.password) {
+      //   done(null, user)
+      // } else {
+      //   done(null, false)
+      // }
     })
     .catch(err => done(err))
 }))
