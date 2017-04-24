@@ -1,3 +1,4 @@
+// Контроллер авторизации
 const passport = require('koa-passport');
 var User = require('../models/user');
 var fs = require('fs');
@@ -14,44 +15,41 @@ var fs = require('fs');
 // })()
 
 
-var fetchUser = async function(username) {
-  console.log('Here 1/',username);
+// Извлечь юзера из БД по имени
+// функция асинхронная, внутри создан промис
+// который переходит в состояние "успешно завершено"
+// если пользователь найден.
+var fetchUserByName = async function(username) {
   var promise = new Promise(function(resolve, reject) {
-    console.log('Here 2/',username);
     User.findOne({
       username: username
     }, function(err, user) {
-
       if (err) {
-        console.log('err');
         return reject(err);
       }
       // No user found with that username
       if (!user) {
-        console.log('No user found with that username /',user,'/ /',username);
         return reject(null);
       }
       // Success
-      console.log('!!!=>', user.username, ' ', user.password);
-      console.log('!!!=>', username);
       return resolve(user);
     });
   });
-  console.log('Yes!!');
   return await promise;
 }
 
-var fetchUserId = async function(id) {
+// Извлечь юзера по _id
+var fetchUserById = async function(_id) {
   var promise = new Promise(function(resolve, reject) {
     User.findOne({
-      id: id
+      _id: _id
     }, function(err, user) {
 
       if (err) {
-        console.log('err');
         return reject(err);
       }
-      // No user found with that username
+      // No user found with that _id
+      // Пользователь с этим _id не найден
       if (!user) {
         return reject(null);
       }
@@ -63,14 +61,18 @@ var fetchUserId = async function(id) {
 }
 
 
-
+// Этот метод нужен чтобы passport получил
+// идентификатор (ключ) для сессии
+// Расширенное пояснение
+// http://stackoverflow.com/questions/27637609/understanding-passport-serialize-deserialize
 passport.serializeUser(function(user, done) {
-  done(null, user.id)
+  done(null, user._id)
 })
-
-passport.deserializeUser(async function(id, done) {
+// Этот метод нужен чтобы passport получил
+// объект "пользователь" для сессии по ключу
+passport.deserializeUser(async function(_id, done) {
   try {
-    var user = await fetchUserId(id)
+    var user = await fetchUserById(_id)
     done(null, user)
   } catch (err) {
    done(err)
@@ -79,27 +81,20 @@ passport.deserializeUser(async function(id, done) {
 
 const LocalStrategy = require('passport-local').Strategy
 passport.use(new LocalStrategy(function(username, password, done) {
-  fetchUser(username)
+  fetchUserByName(username)
     .then(user => {
       user.verifyPassword(password, function(err, isMatch) {
         if (err) {
           return done(null, false)
         }
-
         //Password did not match
+        // Пароль не совпадает
         if (!isMatch) {
           return done(null, false);
         }
-
         // Success
         return done(null, user);
       });
-      console.log('2=>', user.id, ' ', user.password);
-      // if (username === user.username && password === user.password) {
-      //   done(null, user)
-      // } else {
-      //   done(null, false)
-      // }
     })
     .catch(err => done(err))
 }))
@@ -114,12 +109,13 @@ exports.getMain = function(ctx) {
   ctx.body = fs.createReadStream('views/login.html')
 }
 
-// ???
+
 exports.postLoginVerify = passport.authenticate('local', {
   successRedirect: '/beers',
   failureRedirect: '/'
 })
 
+// ???
 exports.postCustom = function(ctx, next) {
   return passport.authenticate('local', function(err, user, info, status) {
     if (user === false) {
