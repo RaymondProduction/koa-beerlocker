@@ -6,7 +6,8 @@ exports.postUsers = function(ctx, next) {
     console.log('=>',ctx.request.body.username);
   var user = new User({
     username: ctx.request.body.username,
-    password: ctx.request.body.password
+    password: ctx.request.body.password,
+    id : ctx.request.body.id,
   });
 
   return user.save(function(err) {

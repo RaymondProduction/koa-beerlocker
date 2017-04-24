@@ -15,16 +15,20 @@ var fs = require('fs');
 
 
 var fetchUser = async function(username) {
+  console.log('Here 1/',username);
   var promise = new Promise(function(resolve, reject) {
+    console.log('Here 2/',username);
     User.findOne({
       username: username
     }, function(err, user) {
 
       if (err) {
+        console.log('err');
         return reject(err);
       }
       // No user found with that username
       if (!user) {
+        console.log('No user found with that username /',user,'/ /',username);
         return reject(null);
       }
       // Success
@@ -37,6 +41,27 @@ var fetchUser = async function(username) {
   return await promise;
 }
 
+var fetchUserId = async function(id) {
+  var promise = new Promise(function(resolve, reject) {
+    User.findOne({
+      id: id
+    }, function(err, user) {
+
+      if (err) {
+        console.log('err');
+        return reject(err);
+      }
+      // No user found with that username
+      if (!user) {
+        return reject(null);
+      }
+      // Success
+      return resolve(user);
+    });
+  });
+  return await promise;
+}
+
 
 
 passport.serializeUser(function(user, done) {
@@ -45,10 +70,10 @@ passport.serializeUser(function(user, done) {
 
 passport.deserializeUser(async function(id, done) {
   try {
-    var user = await fetchUser()
+    var user = await fetchUserId(id)
     done(null, user)
   } catch (err) {
-    done(err)
+   done(err)
   }
 })
 
@@ -69,7 +94,7 @@ passport.use(new LocalStrategy(function(username, password, done) {
         // Success
         return done(null, user);
       });
-      console.log('2=>', user.username, ' ', user.password);
+      console.log('2=>', user.id, ' ', user.password);
       // if (username === user.username && password === user.password) {
       //   done(null, user)
       // } else {
