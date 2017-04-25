@@ -52,7 +52,6 @@ app.use(passport.session())
 var routes = require('./routes');
 
 routes(router);
-var beerController = require('./controllers/beer');
 
 app
   .use(router.routes())

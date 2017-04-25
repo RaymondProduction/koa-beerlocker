@@ -2,8 +2,6 @@ module.exports = function(router) {
 
   // authentication
   const authController = require('./controllers/auth')
-  const passport = require('koa-passport')
-  const fs = require('fs')
 
   var beerController = require('./controllers/beer');
   var userController = require('./controllers/user');
