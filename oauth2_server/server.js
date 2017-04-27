@@ -1,70 +1,51 @@
-// API - Server
+// OAuth Server
 
-// Load required packages
 var mongoose = require('mongoose');
 
 // Connect to the beerlocker MongoDB
-mongoose.connect('mongodb://localhost:27017/beerlocker');
+var uristring = 'mongodb://localhost:27017/oauth';
+mongoose.connect('mongodb://localhost:27017/oauth', function(err, res) {
+  if (err) {
+    console.log('ERROR connecting to: ' + uristring + '. ' + err);
+  } else {
+    console.log('Succeeded connected to: ' + uristring);
+  }
+});
 
-// Create our Koa application
+
+var Router = require('koa-router');
+var bodyparser = require('koa-bodyparser');
 var Koa = require('koa');
+var mount = require('koa-mount');
+var oauthserver = require('koa-oauth-server');
+
+// Create a new koa app.
 var app = new Koa();
 
-
-// var router = new Router({
-//   prefix: '/api'
-// });
-
-// trust proxy
-app.proxy = true
-
-// sessions
-var convert = require('koa-convert')
-var session = require('koa-generic-session')
-app.keys = ['your-session-secret']
-app.use(convert(session()));
-
-// Use the body-parser package in our application
-var bodyParser = require('koa-bodyparser');
-
-// Create our Koa router
-var Router = require('koa-router');
+// Create a router for oauth.
 var router = new Router();
 
+// Enable body parsing.
+app.use(bodyparser());
 
-
-app.use(bodyParser());
-
-// Why doesn't it work!!!?
-/*
-app.use(async ctx => {
-  // the parsed body will store in ctx.request.body
-  // if nothing was parsed, body will be an empty object {}
-  ctx.input_body = ctx.request.body;
+// See https://github.com/thomseddon/node-oauth2-server for specification.
+app.oauth = oauthserver({
+  grants: ['password'],
+  debug: true,
+  model: require('./models/model')
 });
-*/
 
-// authentication
-require('./controllers/auth')
-var passport = require('koa-passport')
-app.use(passport.initialize())
-app.use(passport.session())
-var routes = require('./routes');
+// Mount `oauth2` route prefix.
+app.use(mount('/oauth2', router.middleware()));
 
-routes(router);
+// Register `/token` POST path on oauth router (i.e. `/oauth2/token`).
 
-app
-  .use(router.routes())
-  .use(router.allowedMethods())
-    // Require authentication for now
-  .use(function(ctx, next) {
-    if (ctx.isAuthenticated()) {
-      return next()
-    } else {
-      ctx.redirect('/')
-    }
-  });
+var clientController = require('./controllers/client');
 
+router
+.post('/token', app.oauth.grant())
+.post('/clients', clientController.postClients)
+.get('/clients', clientController.getClients);
 
-// Start the server
+// Start koa server.
 app.listen(3000);

@@ -12,7 +12,7 @@ exports.postUsers = function(ctx, next) {
 
   return user.save(function(err) {
       //if (err)
-        //res.send(err);
+        //res.send(err); - посмотреть как менять http-статус в koa
       ctx.body = {
         message: 'New beer drinker added to the locker room!'
       };

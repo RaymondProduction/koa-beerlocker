@@ -9,8 +9,8 @@ exports.postClients = function(ctx, next) {
   client.name = ctx.request.body.name;
   client.id = ctx.request.body.id;
   client.secret = ctx.request.body.secret;
-  client.userId = ctx.request.user._id;
-
+ // client.userId = ctx.request.user._id;
+  client.userId = ctx.request.user.idd;
   return client.save(function(err) {
     //if (err)
     //res.send(err);
