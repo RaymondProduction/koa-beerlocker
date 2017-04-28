@@ -23,7 +23,9 @@ var oauthserver = require('koa-oauth-server');
 var app = new Koa();
 
 // Create a router for oauth.
-var router = new Router();
+ var router = new Router({
+   prefix: '/oauth2'
+ });
 
 // Enable body parsing.
 app.use(bodyparser());
@@ -35,17 +37,23 @@ app.oauth = oauthserver({
   model: require('./models/model')
 });
 
-// Mount `oauth2` route prefix.
-app.use(mount('/oauth2', router.middleware()));
+var clientController = require('./controllers/client');
+
+// Register `/token` POST path on oauth router (i.e. `/oauth2/token`).
+router
+  .post('/token', app.oauth.grant())
+  .post('/clients', clientController.postClients)
+  .get('/', function(ctx, next) {
+    ctx.body = 'Start OAuth2';
+  });
+
+app
+  .use(router.routes())
+  .use(router.allowedMethods());
 
 // Register `/token` POST path on oauth router (i.e. `/oauth2/token`).
 
-var clientController = require('./controllers/client');
 
-router
-.post('/token', app.oauth.grant())
-.post('/clients', clientController.postClients)
-.get('/clients', clientController.getClients);
 
 // Start koa server.
 app.listen(3000);

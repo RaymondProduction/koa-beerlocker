@@ -36,6 +36,19 @@ var OAuthTokensModel = mongoose.model('OAuthTokens');
 var OAuthClientsModel = mongoose.model('OAuthClients');
 var OAuthUsersModel = mongoose.model('OAuthUsers');
 
+module.exports.OAuthClientsModel = function(){
+ return OAuthClientsModel;
+}
+
+module.exports.OAuthTokensModel = function(){
+ return OAuthTokensModel;
+}
+
+module.exports.OAuthUsersModel = function(){
+ return OAuthUsersModel;
+}
+
+
 /**
  * Get access token.
  */
