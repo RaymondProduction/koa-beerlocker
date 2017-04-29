@@ -31,6 +31,8 @@ exports.getBeers = function(ctx, next) {
     // if (err)
     //res.send(err);
 
+    debugger;
+
     ctx.body = beers;
     return next();
   });

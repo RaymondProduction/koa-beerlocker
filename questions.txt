@@ -1,0 +1,30 @@
+Вопрос в деталях.
+
+
+
+app ---[GET запрос по ссылке с какой информацией?] --------------> oauth2
+                                                                     |
+app  < -- [редирект на стороне сервера ресурс? / с code]-------------+
+ |
+ |  [code — идентификатор Юзера в oauth2, который нужен app (client)]
+ |  [              чтобы получить Токен                             ]
+ |
+app --[POST запрос client_id, client_secret, code, redirect_uri]-->oauth2
+                                                                     |
+                                     +----------------------------------+
+                                     |     исходя из code сервер oauth2 |
+app <--[ token / POST? ]-------------|                                  |
+                                     |  отвечает и отдает нужный токен  |
+                                     +----------------------------------+
+
+Что такое client_secret? - как пароль app
+Чем отличается client_id от user_id? - client_id идентификатор app
+
+Какие модели для БД должны быть на app и oauth2?
+Вопрос о гранте на 43 line oauth.grant()
+
+
+1) сразу переброс на сервер oauth2. (login / password)
+model: app -- user / oauth2 -- client (app)
+2) oatuth2  - user and clients
+   app -  clients - 1 / client_secret -1

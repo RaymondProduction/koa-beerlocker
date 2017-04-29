@@ -18,6 +18,7 @@ var app = new Koa();
 // trust proxy
 app.proxy = true
 
+
 // sessions
 var convert = require('koa-convert')
 var session = require('koa-generic-session')
