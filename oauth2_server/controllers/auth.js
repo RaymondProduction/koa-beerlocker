@@ -131,8 +131,11 @@ exports.getMain = function(ctx) {
 }
 
 exports.getDialog = function(ctx) {
-  ctx.type = 'html'
-  ctx.body = fs.createReadStream('views/dialog.html')
+
+ // ctx.render('dialog', {title :'Cleaning Supplies'});
+  ctx.redirect('http://127.0.0.1:4000/auth&code=100');
+ // ctx.type = 'html'
+ // ctx.body = fs.createReadStream('views/dialog.html')
 }
 
 

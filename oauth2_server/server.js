@@ -22,7 +22,8 @@ var oauthserver = require('koa-oauth-server');
 // Create a new koa app.
 var app = new Koa();
 const authController = require('./controllers/auth');
-const userController = require('./controllers/user')
+const userController = require('./controllers/user');
+
 
 // Create a router for oauth.
 // var router = new Router({
@@ -30,6 +31,24 @@ const userController = require('./controllers/user')
 // });
 
 var router = new Router();
+
+const render = require('koa-ejs');
+const path = require('path');
+// Set view engine to koa-ejs
+render(app, {
+  root: path.join(__dirname, 'views'),
+  layout: 'dialog',
+  viewExt: 'ejs',
+  cache: false,
+  debug: true
+});
+
+/*
+app.use(async function (ctx) {
+  await ctx.render('dialog', {title : 'test'});
+});
+
+*/
 
 // Enable body parsing.
 app.use(bodyparser());
