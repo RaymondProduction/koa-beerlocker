@@ -16,16 +16,20 @@ mongoose.connect('mongodb://localhost:27017/oauth', function(err, res) {
 var Router = require('koa-router');
 var bodyparser = require('koa-bodyparser');
 var Koa = require('koa');
-var mount = require('koa-mount');
+//var mount = require('koa-mount');
 var oauthserver = require('koa-oauth-server');
 
 // Create a new koa app.
 var app = new Koa();
+const authController = require('./controllers/auth');
+const userController = require('./controllers/user')
 
 // Create a router for oauth.
- var router = new Router({
-   prefix: '/oauth2'
- });
+// var router = new Router({
+//   prefix: '/oauth2'
+// });
+
+var router = new Router();
 
 // Enable body parsing.
 app.use(bodyparser());
@@ -39,17 +43,34 @@ app.oauth = oauthserver({
 
 var clientController = require('./controllers/client');
 
+var passport = require('koa-passport')
+app.use(passport.initialize())
+app.use(passport.session())
+
 // Register `/token` POST path on oauth router (i.e. `/oauth2/token`).
 router
   .post('/token', app.oauth.grant())
   .post('/clients', clientController.postClients)
-  .get('/', function(ctx, next) {
-    ctx.body = 'Start OAuth2';
-  });
+  .get('/', authController.getMain)
+  .get('/dialog', authController.getDialog)
+  .post('/user', userController.postUser)
+  .post('/login', authController.postLoginVerify);
+
+// .get('/', function(ctx, next) {
+//   ctx.body = 'Start OAuth2';
+// });
 
 app
   .use(router.routes())
-  .use(router.allowedMethods());
+  .use(router.allowedMethods())
+// Require authentication for now
+.use(function(ctx, next) {
+  if (ctx.isAuthenticated()) {
+    return next()
+  } else {
+    ctx.redirect('/')
+  }
+});
 
 // Register `/token` POST path on oauth router (i.e. `/oauth2/token`).
 

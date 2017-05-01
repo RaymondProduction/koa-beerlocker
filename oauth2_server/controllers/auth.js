@@ -93,6 +93,7 @@ passport.use(new LocalStrategy(function(username, password, done) {
           return done(null, false);
         }
         // Success
+                console.log('progress=>', user);
         return done(null, user);
       });
     })
@@ -129,9 +130,14 @@ exports.getMain = function(ctx) {
   ctx.body = fs.createReadStream('views/login.html')
 }
 
+exports.getDialog = function(ctx) {
+  ctx.type = 'html'
+  ctx.body = fs.createReadStream('views/dialog.html')
+}
+
 
 exports.postLoginVerify = passport.authenticate('local', {
-  successRedirect: '/beers',
+  successRedirect: '/dialog',
   failureRedirect: '/'
 })
 

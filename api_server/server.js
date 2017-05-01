@@ -56,8 +56,9 @@ routes(router);
 
 app
   .use(router.routes())
-  .use(router.allowedMethods())
+  .use(router.allowedMethods());
     // Require authentication for now
+    /*
   .use(function(ctx, next) {
     if (ctx.isAuthenticated()) {
       return next()
@@ -65,7 +66,7 @@ app
       ctx.redirect('/')
     }
   });
-
+*/
 
 // Start the server
 app.listen(4000);
