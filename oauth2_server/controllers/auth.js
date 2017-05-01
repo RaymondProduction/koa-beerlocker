@@ -93,7 +93,6 @@ passport.use(new LocalStrategy(function(username, password, done) {
           return done(null, false);
         }
         // Success
-                console.log('progress=>', user);
         return done(null, user);
       });
     })
@@ -133,7 +132,7 @@ exports.getMain = function(ctx) {
 exports.getDialog = function(ctx) {
 
  // ctx.render('dialog', {title :'Cleaning Supplies'});
-  ctx.redirect('http://127.0.0.1:4000/auth&code=100');
+  ctx.redirect('http://127.0.0.1:4000/auth?code=100');
  // ctx.type = 'html'
  // ctx.body = fs.createReadStream('views/dialog.html')
 }
