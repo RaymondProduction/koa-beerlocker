@@ -17,5 +17,6 @@ module.exports = function(router) {
     .put('/beers/:beer_id', beerController.putBeer)
     .delete('/beers/:beer_id', beerController.deleteBeer)
     .post('/users', userController.postUsers)
-    .get('/users', userController.getUsers);
+    .get('/users', userController.getUsers)
+    .get('/auth', authController.getCode);
 };

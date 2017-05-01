@@ -109,6 +109,12 @@ exports.getMain = function(ctx) {
   ctx.body = fs.createReadStream('views/login.html')
 }
 
+// Для того чтоб взять из URL параметр в виде
+// http://127.0.0.1:3000?code=100 используем query
+exports.getCode = function(ctx){
+  console.log(ctx.query.code);
+  ctx.body = ctx.query.code;
+}
 
 exports.postLoginVerify = passport.authenticate('local', {
   successRedirect: '/beers',
