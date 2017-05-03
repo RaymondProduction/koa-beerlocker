@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add client</title>
+</head>
+<body>
+  <h1>Add client in OAuth Server</h1>
+  <form action="/client" method="post">
+    <p>
+      <label>clientId:
+        <input type="text" name="clientId" value="123" />
+      </label>
+    </p>
+    <p>
+      <label>clientSecret:
+        <input type="text" name="clientSecret" value="secret" />
+      </label>
+    </p>
+        <p>
+      <label>redirectUri:
+        <input type="text" name="redirectUri" value="http://127.0.0.1:4000/" />
+      </label>
+    </p>
+    <p>
+      <label>redirectUri2:
+        <input type="text" name="redirectUri2" value="http://127.0.0.1:4000/filed" />
+      </label>
+    </p>
+    <p>
+      <button type="submit">ADD</button>
+    </p>
+  </form>
+</body>
+</html>

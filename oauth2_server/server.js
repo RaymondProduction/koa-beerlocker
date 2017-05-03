@@ -69,11 +69,12 @@ app.use(passport.session())
 // Register `/token` POST path on oauth router (i.e. `/oauth2/token`).
 router
   .post('/token', app.oauth.grant())
-  .post('/clients', clientController.postClients)
+  .post('/client', clientController.postClient)
   .get('/', authController.getMain)
   .get('/dialog', authController.getDialog)
   .post('/user', userController.postUser)
-  .post('/login', authController.postLoginVerify);
+  .post('/login', authController.postLoginVerify)
+  .get('/client',  clientController.getClient);
 
 app
   .use(router.routes())

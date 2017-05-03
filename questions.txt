@@ -28,3 +28,6 @@ app <--[ token / POST? ]-------------|                                  |
 model: app -- user / oauth2 -- client (app)
 2) oatuth2  - user and clients
    app -  clients - 1 / client_secret -1
+3) кроме code -- username, password
+
+1) Форма для клиентов
