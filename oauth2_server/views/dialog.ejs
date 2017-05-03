@@ -7,12 +7,11 @@
 
     <h1><%= title %></h1>
 
-    <form action="/api/oauth2/authorize" method="post">
-      <input name="transaction_id" type="hidden" value="<%= title %>">
-      <div>
-      <input type="submit" value="Allow" id="allow">
-      <input type="submit" value="Deny" name="cancel" id="deny">
-      </div>
+    <form action="http://127.0.0.1:4000/auth" method="get">
+      <input name="code" type="hidden" value="<%= code %>">
+    <p>
+      <button type="submit">SEND CODE</button>
+    </p>
     </form>
 
   </body>

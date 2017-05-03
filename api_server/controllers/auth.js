@@ -113,7 +113,9 @@ exports.getMain = function(ctx) {
 // http://127.0.0.1:3000?code=100 используем query
 exports.getCode = function(ctx){
   console.log(ctx.query.code);
-  ctx.body = ctx.query.code;
+  //ctx.body = ctx.query.code;
+  ctx.type = 'html'
+  ctx.body = fs.createReadStream('views/gettoken.html')
 }
 
 exports.postLoginVerify = passport.authenticate('local', {

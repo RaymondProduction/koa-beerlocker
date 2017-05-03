@@ -129,12 +129,12 @@ exports.getMain = function(ctx) {
   ctx.body = fs.createReadStream('views/login.html')
 }
 
-exports.getDialog = function(ctx) {
-
- // ctx.render('dialog', {title :'Cleaning Supplies'});
-  ctx.redirect('http://127.0.0.1:4000/auth?code=100');
- // ctx.type = 'html'
- // ctx.body = fs.createReadStream('views/dialog.html')
+// отправка кода с помощью koa-ejs
+exports.getDialog = async function(ctx) {
+  await ctx.render('dialog', {
+    title: 'Send code',
+    code: 100,
+  });
 }
 
 

@@ -75,10 +75,6 @@ router
   .post('/user', userController.postUser)
   .post('/login', authController.postLoginVerify);
 
-// .get('/', function(ctx, next) {
-//   ctx.body = 'Start OAuth2';
-// });
-
 app
   .use(router.routes())
   .use(router.allowedMethods())

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>OAuth2</title>
+  </head>
+  <body>
+
+    <h1><%= title %></h1>
+
+    <form action="/api/oauth2/authorize" method="post">
+      <input name="client_id" type="hidden" value="<%= client_id %>">
+      <input name="user_id" type="hidden" value="<%= user_id %>">
+      <input name="code" type="hidden" value="<%= code %>">
+      <input name="redirect_uri" type="hidden" value="<%= redirect_uri %>">
+      <div>
+      <input type="submit" value="Allow" id="allow">
+      <input type="submit" value="Deny" name="cancel" id="deny">
+      </div>
+    </form>
+
+  </body>
+</html>
