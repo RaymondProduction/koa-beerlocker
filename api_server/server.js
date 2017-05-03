@@ -36,6 +36,18 @@ var router = new Router();
 
 app.use(bodyParser());
 
+const render = require('koa-ejs');
+const path = require('path');
+
+// Set view engine to koa-ejs
+render(app, {
+  root: path.join(__dirname, 'views'),
+  layout: 'gettoken',
+  viewExt: 'ejs',
+  cache: false,
+  debug: true
+});
+
 // Why doesn't it work!!!?
 /*
 app.use(async ctx => {

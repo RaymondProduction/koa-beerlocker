@@ -84,4 +84,26 @@ Create the model that will store our access tokens. Access tokens are the final 
 
 A simple user interface created using ejs.
 
+## Schema how work OAuth Server
+```
+app ---[GET запрос по ссылке с какой информацией?] --------------> oauth2
+                                                                     |
+app  < -- [редирект на стороне сервера ресурс? / с code]-------------+
+ |
+ |  [code — идентификатор Юзера в oauth2, который нужен app (client)]
+ |  [              чтобы получить Токен                             ]
+ |
+app --[POST запрос client_id, client_secret, code, redirect_uri]-->oauth2
+                                                                     |
+                                     +----------------------------------+
+                                     |     исходя из code сервер oauth2 |
+app <--[ token / POST? ]-------------|                                  |
+                                     |  отвечает и отдает нужный токен  |
+                                     +----------------------------------+
+```
+1) сразу переброс на сервер oauth2. (login / password)
+model: app -- user / oauth2 -- client (app)
+2) oatuth2  - user and clients
+   app -  clients - 1 / client_secret -1
+
 [Beer Locker: Building a RESTful API With Node](http://scottksmith.com/blog/2014/05/02/building-restful-apis-with-node/)

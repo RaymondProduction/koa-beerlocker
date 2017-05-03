@@ -111,11 +111,17 @@ exports.getMain = function(ctx) {
 
 // Для того чтоб взять из URL параметр в виде
 // http://127.0.0.1:3000?code=100 используем query
-exports.getCode = function(ctx){
+// отправка кода с помощью koa-ejs
+exports.getCode =  async function(ctx) {
+  await ctx.render('gettoken', {
+    title: 'GET TOKEN',
+    client_id: 1,
+    user_id : 1,
+    code : 100,
+    redirect_uri : 'http://127.0.0.1:4000/',
+  });
   console.log(ctx.query.code);
   //ctx.body = ctx.query.code;
-  ctx.type = 'html'
-  ctx.body = fs.createReadStream('views/gettoken.html')
 }
 
 exports.postLoginVerify = passport.authenticate('local', {
