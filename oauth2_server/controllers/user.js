@@ -6,7 +6,9 @@ exports.postUser = function(ctx, next) {
   var user = new User({
     username: ctx.request.body.username,
     password: ctx.request.body.password,
-    id : ctx.request.body.id,
+    email : ctx.request.body.email,
+    firstname : ctx.request.body.firstname,
+    lastname : ctx.request.body.lastname,
   });
 
 
@@ -19,4 +21,10 @@ exports.postUser = function(ctx, next) {
     };
     return next();
   });
+};
+
+exports.getUser = function(ctx) {
+  var fs = require('fs');
+  ctx.type = 'html'
+  ctx.body = fs.createReadStream('views/user.html');
 };
