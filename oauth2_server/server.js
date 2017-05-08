@@ -22,7 +22,6 @@ var oauthserver = require('koa-oauth-server');
 // Create a new koa app.
 var app = new Koa();
 const authController = require('./controllers/auth');
-const userController = require('./controllers/user');
 
 
 // Create a router for oauth.
@@ -61,6 +60,7 @@ app.oauth = oauthserver({
 });
 
 var clientController = require('./controllers/client');
+var userController = require('./controllers/user');
 
 var passport = require('koa-passport')
 app.use(passport.initialize())
@@ -69,12 +69,14 @@ app.use(passport.session())
 // Register `/token` POST path on oauth router (i.e. `/oauth2/token`).
 router
   .post('/token', app.oauth.grant())
+  .post('/user', userController.postUser)
   .post('/client', clientController.postClient)
   .get('/', authController.getMain)
   .get('/dialog', authController.getDialog)
   .post('/user', userController.postUser)
   .post('/login', authController.postLoginVerify)
-  .get('/client',  clientController.getClient);
+  .get('/client',  clientController.getClient)
+  .get('/user',  userController.getUser);
 
 app
   .use(router.routes())
