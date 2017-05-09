@@ -66,16 +66,16 @@ var fetchUserById = async function(_id) {
 // Расширенное пояснение
 // http://stackoverflow.com/questions/27637609/understanding-passport-serialize-deserialize
 passport.serializeUser(function(user, done) {
-  done(null, user._id)
-})
-// Этот метод нужен чтобы passport получил
-// объект "пользователь" для сессии по ключу
+    done(null, user._id)
+  })
+  // Этот метод нужен чтобы passport получил
+  // объект "пользователь" для сессии по ключу
 passport.deserializeUser(async function(_id, done) {
   try {
     var user = await fetchUserById(_id)
     done(null, user)
   } catch (err) {
-   done(err)
+    done(err)
   }
 })
 
@@ -112,15 +112,32 @@ exports.getMain = function(ctx) {
 // Для того чтоб взять из URL параметр в виде
 // http://127.0.0.1:3000?code=100 используем query
 // отправка кода с помощью koa-ejs
-exports.getCode =  async function(ctx) {
-  await ctx.render('gettoken', {
-    title: 'GET TOKEN',
-    client_id: 1,
-    user_id : 1,
-    code : 100,
-    redirect_uri : 'http://127.0.0.1:4000/',
-  });
+exports.getCode = async function(ctx) {
+  // await ctx.render('gettoken', {
+  //   title: 'GET TOKEN',
+  //   client_id: 1,
+  //   user_id: 1,
+  //   code: 100,
+  //   redirect_uri: 'http://127.0.0.1:4000/',
+  // });
   console.log(ctx.query.code);
+  var request = require('request');
+  request.post({
+      url: 'http://127.0.0.1:3000/token',
+      form: {
+        title: 'GET TOKEN',
+        client_id: 1,
+        user_id: 1,
+        code: 100,
+        redirect_uri: 'http://127.0.0.1:4000/',
+      }
+    },
+    function(error, response, body) {
+      console.log('error:', error); // Print the error if one occurred
+      console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
+      console.log('body:', body); // Print the HTML for the Google homepage.
+    });
+
   //ctx.body = ctx.query.code;
 }
 

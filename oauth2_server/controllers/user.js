@@ -1,5 +1,7 @@
 // Load required packages
-var User = require('../models/user');
+model = require('../models/model');
+var User = model.OAuthUsersModel();
+
 // Create endpoint /api/client for POST
 exports.postUser = function(ctx, next) {
   // Create a new instance of the Client model
@@ -11,11 +13,10 @@ exports.postUser = function(ctx, next) {
     lastname : ctx.request.body.lastname,
   });
 
-
-
   return user.save(function(err) {
     //if (err)
     //res.send(err);
+    console.log('Test');
     ctx.body = {
       message: 'Added new user in the base!'
     };

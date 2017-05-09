@@ -82,7 +82,7 @@ app
   .use(router.routes())
   .use(router.allowedMethods())
 // Require authentication for now
-/*
+
 .use(function(ctx, next) {
   if (ctx.isAuthenticated()) {
     return next()
@@ -90,7 +90,7 @@ app
     ctx.redirect('/')
   }
 });
-*/
+
 // Register `/token` POST path on oauth router (i.e. `/oauth2/token`).
 
 
